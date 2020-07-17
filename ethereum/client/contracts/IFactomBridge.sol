@@ -2,6 +2,7 @@ pragma solidity ^0.6;
 
 
 interface IFactomBridge {
+    
     event BlockHashAdded(
         uint64 indexed height,
         bytes32 blockHash
@@ -19,8 +20,14 @@ interface IFactomBridge {
     function deposit() external payable;
     function withdraw() external;
 
+    // Initalization functionality
     function initWithValidators(bytes calldata initialValidators) external;
     function initWithBlock(bytes calldata data) external;
     function initEmpty(bytes calldata) external;
+
+
+    function addLightClientBlock(bytes calldata data) external;
+    function challenge(address payable receiver, uint256 signatureIndex) external;
+    function checkBlockProducerSignatureInHead(uint256 signatureIndex) external view returns(bool);
 
 }
