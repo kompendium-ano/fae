@@ -95,7 +95,7 @@ contract WealthToken is ERC223Interface, BaseToken {
     //   uint8 public decimals = 18;
     // Defining the value of a million for easy calculations - order of declaration matters (hoisting)
     //   uint256 million = 1000000 * (10 ** uint256(decimals));
-    // We are offering a total of 100 Million Ulcoin Tokens to distribute
+    // We are offering a total of 100 Million tokens to distribute
     uint256 public totalSupply = 40000 * 1000000 * 10**18;
     // Address where all the tokens are held, as tokens aren't held within the Smart Contract
     address public masterWallet;
