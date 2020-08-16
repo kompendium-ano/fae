@@ -4,7 +4,22 @@ use wasm_bindgen::prelude::*;
 use ethereum_types::{H256};
 use parity_bytes::BytesRef;
 
-pub fn main () {}
+// Our function to concatenate the string "Factom/Fat example"
+// to the input string. We are using .into(), to convert
+// the rust types of str to a String.
+#[wasm_bindgen]
+pub fn add_wasm_string(input_string: String) -> String {
+  let result = format!("{} {}", input_string, "Factom/FAT example");
+  return result.into();
+}
+
+#[wasm_bindgen]
+pub fn test() -> String {
+  let mut bytes = vec![];
+  let mut output = BytesRef::Flexible(&mut bytes);
+  let mike = EcRecover{};
+  "hi".to_string()
+}
 
 
 /** the following is copied from ethcore/src/builtin.rs **/
