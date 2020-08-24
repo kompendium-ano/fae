@@ -86,4 +86,34 @@ contract FactomBridge is IFactomBridge {
 
         _payRewardAndRollBack(receiver);
     }
+
+   function initWithBlock(bytes memory data) override public {
+        require(currentBlockProducers.totalStake > 0, "FactomBridge: validators need to be initialized first");
+        require(!initialized, "FactomBridge: already initialized");
+        initialized = true;
+
+        Data memory borsh = from(data);
+        FactomDecoder.LightClientBlock memory nearBlock = data.decodeLightClientBlock();
+        require(borsh.finished(), "FactomBridge: only light client block should be passed as first argument");
+
+        require(!nearBlock.next_vals.none, "FactomBridge: Initialization block should contain next_vals.");
+        setBlock(nearBlock, head);
+        // setBlockProducers(nearBlock.next_block_vals.validatorEntries, nextBlockProducers);
+        blockHashes_[head.height] = head.hash;
+        blockMerkleRoots_[head.height] = head.merkleRoot;
+    }
+
+    // Fill out required block information
+    function setBlock(FactomDecoder.LightClientBlock memory src, BlockInfo storage dest) internal {
+        dest.height = src.inner_lite.height;
+        dest.timestamp = src.inner_lite.timestamp;
+
+        dest.next_hash = src.next_hash;
+
+        emit BlockHashAdded(
+            src.inner_lite.height,
+            src.hash
+        );
+    }
+
 }
