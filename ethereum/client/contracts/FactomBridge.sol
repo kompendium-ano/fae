@@ -116,4 +116,19 @@ contract FactomBridge is IFactomBridge {
         );
     }
 
+    function commitBlock() internal {
+        require(lastValidAt != 0 && block.timestamp >= lastValidAt, "Nothing to commit");
+
+        head = untrustedHead;
+        if (untrustedHeadIsFromNextBlock) {
+            // Switch to the next block. It is guaranteed that untrustedNextBlockProducers is set.
+            copyBlockProducers(nextBlockProducers, currentBlockProducers);
+            copyBlockProducers(untrustedNextBlockProducers, nextBlockProducers);
+        }
+        lastValidAt = 0;
+
+        blockHashes_[head.height] = head.hash;
+        blockMerkleRoots_[head.height] = head.merkleRoot;
+    }
+
 }
