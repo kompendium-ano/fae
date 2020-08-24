@@ -19,6 +19,16 @@ contract FactomDecoder {
          // TODO: decode from data
      }
 
-     
+     struct LightClientBlock {
+        bytes32 prev_block_hash;
+        bytes32 next_block_inner_hash;
+        BlockHeaderInnerLite inner_lite;
+        bytes32 inner_rest_hash;
+        //OptionalValidatorStakes next_block_vals; // we want to incentivize validators through staking
+        OptionalSignature[] approvals_after_next;
+
+        bytes32 hash;
+        bytes32 next_hash;
+    }
 
 }
