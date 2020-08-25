@@ -96,7 +96,7 @@ contract FactomBridge is IFactomBridge {
         initialized = true;
 
         Data memory borsh = from(data);
-        FactomDecoder.LightClientBlock memory nearBlock = data
+        FactomDecoder.LightClientBlock memory factomBlock = data
             .decodeLightClientBlock();
         require(
             borsh.finished(),
@@ -104,11 +104,11 @@ contract FactomBridge is IFactomBridge {
         );
 
         require(
-            !nearBlock.next_vals.none,
+            !factomBlock.next_vals.none,
             "FactomBridge: Initialization block should contain next_vals."
         );
-        setBlock(nearBlock, head);
-        // setBlockProducers(nearBlock.next_block_vals.validatorEntries, nextBlockProducers);
+        setBlock(factomBlock, head);
+        // setBlockProducers(factomBlock.next_block_vals.validatorEntries, nextBlockProducers);
         blockHashes_[head.height] = head.hash;
         blockMerkleRoots_[head.height] = head.merkleRoot;
     }
@@ -198,5 +198,39 @@ contract FactomBridge is IFactomBridge {
         r = ((r & 0x00000000FFFFFFFF) << 32) | ((r & 0xFFFFFFFF00000000) >> 32);
         r = ((r & 0x0000FFFF0000FFFF) << 16) | ((r & 0xFFFF0000FFFF0000) >> 16);
         r = ((r & 0x00FF00FF00FF00FF) << 8) | ((r & 0xFF00FF00FF00FF00) >> 8);
+    }
+
+    function blockHashes(uint64 height)
+        public
+        override
+        view
+        returns (bytes32 res)
+    {
+        res = blockHashes_[height];
+        if (
+            res == 0 &&
+            block.timestamp >= lastValidAt &&
+            lastValidAt != 0 &&
+            height == untrustedHead.height
+        ) {
+            res = untrustedHead.hash;
+        }
+    }
+
+    function blockMerkleRoots(uint64 height)
+        public
+        override
+        view
+        returns (bytes32 res)
+    {
+        res = blockMerkleRoots_[height];
+        if (
+            res == 0 &&
+            block.timestamp >= lastValidAt &&
+            lastValidAt != 0 &&
+            height == untrustedHead.height
+        ) {
+            res = untrustedHead.merkleRoot;
+        }
     }
 }
