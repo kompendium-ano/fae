@@ -233,4 +233,19 @@ contract FactomBridge is IFactomBridge {
             res = untrustedHead.merkleRoot;
         }
     }
+
+    // Check that the new block is signed by more than 2/3 of the validators.
+    checkSignByValidators(factomBlock, factomBlockIsFromNextBlock ? nextBlockProducers : currentBlockProducers);
+
+        // If the block is from the next Block, make sure that next_bps is supplied and has a correct hash.
+        if (factomBlockIsFromNextBlock) {
+            require(
+                !factomBlock.next_bps.none,
+                "FactomBridge: Next next_bps should not be None"
+            );
+            require(
+                factomBlock.next_bps.hash == factomBlock.inner_lite.next_bp_hash,
+                "FactomBridge: Hash of block producers does not match"
+            );
+        }
 }
