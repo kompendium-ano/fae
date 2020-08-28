@@ -255,4 +255,13 @@ contract FactomBridge is IFactomBridge {
         require(balanceOf[msg.sender] >= lockEthAmount, "Not enough funds on balance");
         Data memory data = Data.from(data);
     }
+
+    struct BridgeState {
+        uint currentHeight;      // Height of the current confirmed block, if none all other fields are zero
+        uint nextTimestamp;      // Timestamp of the current unconfirmed block
+        uint nextValidAt;        // Timestamp when the current unconfirmed block will be confirmed
+        uint numBlockProducers;  // Number of block producers for the current unconfirmed block
+    }
+
+
 }
