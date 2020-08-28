@@ -235,7 +235,7 @@ contract FactomBridge is IFactomBridge {
     }
 
     // Check that the new block is signed by more than 2/3 of the validators.
-    checkSignByValidators(factomBlock, factomBlockIsFromNextBlock ? nextBlockProducers : currentBlockProducers);
+    function checkSignByValidators(factomBlock, factomBlockIsFromNextBlock ? nextBlockProducers : currentBlockProducers){
 
         // If the block is from the next Block, make sure that next_bps is supplied and has a correct hash.
         if (factomBlockIsFromNextBlock) {
@@ -248,4 +248,11 @@ contract FactomBridge is IFactomBridge {
                 "FactomBridge: Hash of block producers does not match"
             );
         }
+    }
+
+    function addLightClientBlock(bytes memory data) override public {
+        require(initialized, "FactomBridge: contract is not initialized.");
+        require(balanceOf[msg.sender] >= lockEthAmount, "Not enough funds on balance");
+        Data memory data = Data.from(data);
+    }
 }
