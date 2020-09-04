@@ -276,4 +276,14 @@ contract FactomBridge is IFactomBridge {
         }
     }
 
+    function decodeLightClientBlock(Data memory data) internal view returns(LightClientBlock memory header) {
+        header.prev_block_hash = data.decodeBytes32();
+        header.next_block_inner_hash = data.decodeBytes32();
+        header.inner_lite = data.decodeBlockHeaderInnerLite();
+        header.inner_rest_hash = data.decodeBytes32();
+
+    }
+
+
+
 }
