@@ -1,0 +1,3 @@
+- **EthBridge**: WASM smart contract for Factom blockchain, Ethereum light client storing hashes of blocks
+- **EthRelay**: application, streaming Ethereum block headers to **EthBridge** smart contract in Factom blockchain.
+- **EthProver**: W smart contract for Factom blockchain, helps verify log entry was included in tx receipt, which was included in block

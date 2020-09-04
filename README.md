@@ -14,10 +14,11 @@ The Ethereum to Factom bridge should be implemented as mutual smart-contract bas
 
 ## Structure
 
-- `ethereum` - everything related to the Ethereum side of the system
-- `factom`   - everything related to the Factom side of the system
-- `docs`     - additional documentation for the project
 - `app`      - example app for ERC20 token transfer with some simplistic UI
+- `docs`     - additional documentation for the project
+- `factom`   - everything related to the Factom side of the system
+- `ethereum` - everything related to the Ethereum side of the system
+
 
 ### Ethereum Side
 - **FactomBridge**: Solidity smart contract for Ethereum blockchain, Factom light client storing hashes of blocks
@@ -27,6 +28,6 @@ The Ethereum to Factom bridge should be implemented as mutual smart-contract bas
 ### Factom side
 - **EthBridge**: WASM smart contract for Factom blockchain, Ethereum light client storing hashes of blocks
 - **EthRelay**: application, streaming Ethereum block headers to **EthBridge** smart contract in Factom blockchain.
-- **EthProver**: W smart contract for Factom blockchain, helps verify log entry was included in tx receipt, which was included in block
+- **EthProver**: WASM smart contract for Factom blockchain, helps verify log entry was included in tx receipt, which was included in block
 
 ## Workflow
