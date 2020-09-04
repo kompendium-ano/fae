@@ -263,5 +263,17 @@ contract FactomBridge is IFactomBridge {
         uint numBlockProducers;  // Number of block producers for the current unconfirmed block
     }
 
+    function bridgeState() public view returns (BridgeState memory res) {
+        if (block.timestamp < lastValidAt) {
+            res.currentHeight = head.height;
+            res.nextTimestamp = untrustedHead.timestamp;
+            res.nextValidAt = lastValidAt;
+            res.numBlockProducers =
+                (untrustedHeadIsFromNextBlock ? nextBlockProducers : currentBlockProducers)
+                .bpsLength;
+        } else {
+            res.currentHeight = (lastValidAt == 0 ? head : untrustedHead).height;
+        }
+    }
 
 }
