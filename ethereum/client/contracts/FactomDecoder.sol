@@ -39,4 +39,25 @@ contract FactomDecoder {
         bytes32 hash;
         bytes32 next_hash;
     }
+
+    struct ValidatorStake {
+        string account_id;
+        PublicKey public_key;
+        uint128 stake;
+    }
+
+    function decodeValidatorStake(Borsh.Data memory data) internal pure returns(ValidatorStake memory validatorStake) {
+        validatorStake.account_id = string(data.decodeBytes());
+        validatorStake.public_key = data.decodePublicKey();
+        validatorStake.stake = data.decodeU128();
+    }
+
+    struct OptionalValidatorStakes {
+        bool none;
+
+        ValidatorStake[] validatorStakes;
+        bytes32 hash; // Additional computable element
+    }
+
+
 }
