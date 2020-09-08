@@ -95,11 +95,11 @@ contract FactomBridge is IFactomBridge {
         require(!initialized, "FactomBridge: already initialized");
         initialized = true;
 
-        Data memory borsh = from(data);
+        Data memory data = from(data);
         FactomDecoder.LightClientBlock memory factomBlock = data
             .decodeLightClientBlock();
         require(
-            borsh.finished(),
+            data.finished(),
             "FactomBridge: only light client block should be passed as first argument"
         );
 
