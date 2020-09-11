@@ -46,7 +46,7 @@ contract FactomDecoder {
         uint128 stake;
     }
 
-    function decodeValidatorStake(Borsh.Data memory data) internal pure returns(ValidatorStake memory validatorStake) {
+    function decodeValidatorStake(Data memory data) internal pure returns(ValidatorStake memory validatorStake) {
         validatorStake.account_id = string(data.decodeBytes());
         validatorStake.public_key = data.decodePublicKey();
         validatorStake.stake = data.decodeU128();
