@@ -254,6 +254,69 @@ contract FactomBridge is IFactomBridge {
         require(initialized, "FactomBridge: contract is not initialized.");
         require(balanceOf[msg.sender] >= lockEthAmount, "Not enough funds on balance");
         Data memory data = Data.from(data);
+
+        FactomDecoder.LightClientBlock memory factomBlock = borsh.decodeLightClientBlock();
+        require(borsh.finished(), "FactomBridge: only light client block should be passed");
+
+        // Commit the previous block, or make sure that it is OK to replace it.
+        if (block.timestamp >= lastValidAt) {
+            if (lastValidAt != 0) {
+                commitBlock();
+            }
+        } else {
+            require(factomBlock.inner_lite.timestamp >= untrustedHead.timestamp.add(replaceDuration), "FactomBridge: can only replace with a sufficiently newer block");
+        }
+
+        // Check that the new block's height is greater than the current one's.
+        require(
+            factomBlock.inner_lite.height > head.height,
+            "FactomBridge: Height of the block is not valid"
+        );
+
+        // Check that the new block is from the same epoch as the current one, or from the next one.
+        bool factomBlockIsFromNextBlock;
+        if (factomBlock.inner_lite.epoch_id == head.epochId) {
+            factomBlockIsFromNextBlock = false;
+        } else if (factomBlock.inner_lite.epoch_id == head.nextBlockId) {
+            factomBlockIsFromNextBlock = true;
+        } else {
+            revert("FactomBridge: Block id of the block is not valid");
+        }
+
+        // Check that the new block is signed by more than 2/3 of the validators.
+        _checkBp(factomBlock, factomBlockIsFromNextBlock ? nextBlockProducers : currentBlockProducers);
+
+        // If the block is from the next epoch, make sure that next_bps is supplied and has a correct hash.
+        if (factomBlockIsFromNextBlock) {
+            require(
+                !factomBlock.next_bps.none,
+                "FactomBridge: Next next_bps should not be None"
+            );
+            require(
+                factomBlock.next_bps.hash == factomBlock.inner_lite.next_bp_hash,
+                "FactomBridge: Hash of block producers does not match"
+            );
+        }
+
+        setBlock(factomBlock, untrustedHead);
+        untrustedApprovalCount = factomBlock.approvals_after_next.length;
+        for (uint i = 0; i < factomBlock.approvals_after_next.length; i++) {
+            untrustedApprovals[i] = factomBlock.approvals_after_next[i];
+        }
+        untrustedHeadIsFromNextBlock = factomBlockIsFromNextBlock;
+        if (factomBlockIsFromNextBlock) {
+            setBlockProducers(factomBlock.next_bps.validatorStakes, untrustedNextBlockProducers);
+        }
+        lastSubmitter = msg.sender;
+        lastValidAt = block.timestamp.add(lockDuration);
+
+
+
+
+
+
+
+
     }
 
     struct BridgeState {
@@ -283,6 +346,9 @@ contract FactomBridge is IFactomBridge {
         header.inner_rest_hash = data.decodeBytes32();
 
     }
+
+
+
 
 
 
