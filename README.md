@@ -1,5 +1,7 @@
 # FAE
 
+__NOTE: currently in a process of merging from several other repos and branches that used for experiments.__
+
 Factom-2-Ethereum bidirectional bridge. Main idea is to re-use smart-contracts functionality from Ethereum and Factom platforms and allow calling contracts and data from one system to another. For the current setup, we forsee 2 main cases:
 
 - transferring ERC20, ERC-721, ERC-1155 from Ethereum to Factom via FAT
