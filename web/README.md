@@ -32,6 +32,6 @@ Removes this tool and copies build dependencies, configuration files
 We suggest that you begin by typing:
 
 ```
-  cd fae-ui
+  cd web
   yarn start
 ```
