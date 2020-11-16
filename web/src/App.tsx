@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Home from './pages/Home';
 import { Web3Provider } from './contexts/Web3Context'
+import { BridgeProvider } from './contexts/BridgeContext'
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Web3Provider>
-          <Home></Home>
+          <BridgeProvider>
+            <Home></Home>
+          </BridgeProvider>
         </Web3Provider>
       </header>
     </div>

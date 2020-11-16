@@ -13,7 +13,7 @@ type HomeProps = {
   selectTokens: (id: number) => void,
 };
 
-class Stories extends React.Component<HomeProps, {}> {
+class Home extends React.Component<HomeProps, {}> {
 
   componentDidMount() {
     this.props.fetchTokens();
