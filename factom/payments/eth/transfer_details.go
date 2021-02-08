@@ -23,3 +23,21 @@ type TransferDetails struct {
 	From      common.Address `json:"from"`
 	To        common.Address `json:"to"`
 }
+
+type SettlementDetails struct {
+	TimeStamp     *big.Int       `json:"timestamp"`
+	Amount        *big.Int       `json:"amount"`
+	From          common.Address `json:"from"`
+	To            common.Address `json:"to"`
+	ApplicationId common.Address `json:"applicationId"`
+	UserId        string         `json:"userId"`
+	Balance       *big.Int       `json:"balance"`
+}
+
+type SettlementEvent struct {
+	From           common.Address
+	UserId         string
+	To             common.Address
+	Amount         *big.Int
+	RewardsAddress common.Address
+}
