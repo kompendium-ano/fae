@@ -2,11 +2,12 @@ package payments
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 func NormalizeAddress(s string) string {
@@ -50,4 +51,35 @@ func VerifySig(from, sigHex string, msg []byte) bool {
 	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
 
 	return fromAddr == recoveredAddr
+}
+
+// https://github.com/ethereum/go-ethereum/blob/55599ee95d4151a2502465e0afc7c47bd1acba77/internal/ethapi/api.go#L404
+// signHash is a helper function that calculates a hash for the given message that can be
+// safely used to calculate a signature from.
+//
+// The hash is calculated as
+//   keccak256("\x19Ethereum Signed Message:\n"${message length}${message}).
+//
+// This gives context to the signed message and prevents signing of transactions.
+func SignHash(data []byte) []byte {
+	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
+	return crypto.Keccak256([]byte(msg))
+}
+
+func CalculateRewardsDay(timestamp int64) int64 {
+	secondsFromRewardsStartTimestamp := timestamp - viper.GetInt64("rewards_start_timestamp")
+	secondsInDay := viper.GetInt64("seconds_in_day")
+	ret := (secondsFromRewardsStartTimestamp / secondsInDay) + 1
+	if ret < 0 && (secondsFromRewardsStartTimestamp%secondsInDay) != 0 {
+		ret = ret - 1
+	}
+	return ret
+}
+
+// Abs returns the absolute value of x.
+func Abs(x int64) int64 {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
