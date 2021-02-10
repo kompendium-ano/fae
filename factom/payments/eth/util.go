@@ -73,6 +73,10 @@ func CalculateRewardsDay(timestamp int64) int64 {
 	if ret < 0 && (secondsFromRewardsStartTimestamp%secondsInDay) != 0 {
 		ret = ret - 1
 	}
+	/*
+		logger.Infof("*********** secondsFromStart/secondInDay = %v, timestamp = %v, start_timestamp = %v, secondsInDay = %v, ret = %v",
+			secondsFromRewardsStartTimestamp / secondsInDay, timestamp, viper.GetInt64("rewards_start_timestamp"), secondsInDay, ret)
+	*/
 	return ret
 }
 
