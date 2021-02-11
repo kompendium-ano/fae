@@ -1,18 +1,14 @@
 package payments
 
 import (
-	"context"
-	"encoding/hex"
-	"fmt"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/propsproject/goprops-toolkit/propstoken/bindings/token"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"math/big"
 	"os"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type TransferDetails struct {
@@ -40,4 +36,34 @@ type SettlementEvent struct {
 	To             common.Address
 	Amount         *big.Int
 	RewardsAddress common.Address
+}
+
+var atom = zap.NewAtomicLevel()
+var encoderCfg = zap.NewProductionEncoderConfig()
+var logger *zap.SugaredLogger
+
+var doOnce sync.Once
+
+func initLogger() {
+	doOnce.Do(func() {
+		encoderCfg.TimeKey = "timestamp"
+		encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
+		atom.SetLevel(zap.DebugLevel)
+
+		var tmpLogger = zap.New(zapcore.NewCore(
+			zapcore.NewJSONEncoder(encoderCfg),
+			zapcore.Lock(os.Stdout),
+			atom,
+		))
+
+		tmpLogger = tmpLogger.With(
+			zap.String("app", viper.GetString("app")),
+			zap.String("name", viper.GetString("name")),
+			zap.String("env", viper.GetString("environment")),
+		)
+
+		defer tmpLogger.Sync()
+
+		logger = tmpLogger.Sugar()
+	})
 }
