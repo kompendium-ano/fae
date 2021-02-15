@@ -1,4 +1,4 @@
-package payments
+package rewards
 
 import (
 	"context"
