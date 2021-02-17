@@ -21,7 +21,6 @@ The Ethereum to Factom bridge should be implemented as mutual smart-contract bas
 - `factom`   - everything related to the Factom side of the system
 - `ethereum` - everything related to the Ethereum side of the system
 
-
 ### Ethereum Side
 - **FactomBridge**: Solidity smart contract for Ethereum blockchain, Factom light client storing hashes of blocks
 - **FactomRelay**: an application, streaming Factom block headers to **FactomBridge** smart contract in Ethereum blockchain.
@@ -32,4 +31,13 @@ The Ethereum to Factom bridge should be implemented as mutual smart-contract bas
 - **EthRelay**: application, streaming Ethereum block headers to **EthBridge** smart contract in Factom blockchain.
 - **EthProver**: WASM smart contract for Factom blockchain, helps verify log entry was included in tx receipt, which was included in block
 
-## Workflow
+## Running
+
+You can run system with available docker setup and docker-compose
+
+```
+# service docker start
+# docker-compose up -d
+```
+
+compose will start all required service on both sides and connect to hosted blokchain nodes. If you want to connect to local or special remote nodes, you'll need to change configuation

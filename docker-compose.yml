@@ -1,0 +1,73 @@
+version: '2'
+services:
+  ## collecting rewards and
+  ## other statical data
+  db:
+    environment:
+     - POSTGRES_PASSWORD=fae
+     - POSTGRES_USER=fae
+    expose:
+      - '5432'
+    image: 'postgres:9.5'
+    ports:
+      - '5432:5432'
+  eth-relayer:
+    command: run
+    expose:
+      - '3000'
+    image: '936358054419.dkr.ecr.us-east-1.amazonaws.com/kelecorix/fae:eth-relayer'
+    links:
+      - 'db:dblink'
+    external_links:
+      - db_1
+    ports:
+      - '3000:3000'
+    privileged: true
+  eth-prover:
+    command: run
+    expose:
+      - '3001'
+    image: '936358054419.dkr.ecr.us-east-1.amazonaws.com/kelecorix/fae:eth-prover'
+    links:
+      - 'db:dblink'
+    external_links:
+      - db_1
+    ports:
+      - '3001:3001'
+    privileged: true
+  fat-relayer:
+    command: run
+    expose:
+      - '4000'
+    image: '936358054419.dkr.ecr.us-east-1.amazonaws.com/kelecorix/fae:fat-relayer'
+    links:
+      - 'db:dblink'
+    external_links:
+      - db_1
+    ports:
+      - '4000:4000'
+    privileged: true
+  fat-prover:
+    command: run
+    expose:
+      - '4001'
+    image: '936358054419.dkr.ecr.us-east-1.amazonaws.com/kelecorix/fae:fat-prover'
+    links:
+      - 'db:dblink'
+    external_links:
+      - db_1
+    ports:
+      - '4001:4001'
+    privileged: true
+
+#############################################################
+
+  watchtower:
+    image: v2tec/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    environment:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+    command: --interval 60 --debug
