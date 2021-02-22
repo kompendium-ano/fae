@@ -2,7 +2,7 @@
 
 __NOTE: currently in a process of merging from several other repos and branches that used for experiments.__
 
-Factom-2-Ethereum bidirectional bridge. Main idea is to re-use smart-contracts functionality from Ethereum and Factom platforms and allow calling contracts and data from one system to another. For the current setup, we forsee 2 main cases:
+Factom-2-Ethereum bidirectional bridge. Main idea is to re-use smart-contracts functionality from Ethereum and Factom platforms and allow calling contracts and data from one system to another. For the current setup, we forsee following cases:
 
 - transferring ERC20, ERC-721, ERC-1155 from Ethereum to Factom via FAT
 - storing data of Factom, calling it from Ethereum side
@@ -14,12 +14,12 @@ Factom-2-Ethereum bidirectional bridge. Main idea is to re-use smart-contracts f
 
 The Ethereum to Factom bridge should be implemented as mutual smart-contract based solution, thus would provide full security of respective networks for the bridge. Currentlty, building Factom smart contract and relayer for Etheruem blockchain light verification.
 
-## Structure
+## Repository Structure
 
-- `app`      - example app for ERC20 token transfer with some simplistic UI
 - `docs`     - additional documentation for the project
 - `factom`   - everything related to the Factom side of the system
 - `ethereum` - everything related to the Ethereum side of the system
+- `test`     - example scripts for ERC20 token transfer
 
 ### Ethereum Side
 - **FactomBridge**: Solidity smart contract for Ethereum blockchain, Factom light client storing hashes of blocks
@@ -33,11 +33,11 @@ The Ethereum to Factom bridge should be implemented as mutual smart-contract bas
 
 ## Running
 
-You can run system with available docker setup and docker-compose
+You can run full operational setup with `docker` and `docker-compose`
 
 ```
 # service docker start
 # docker-compose up -d
 ```
 
-compose will start all required service on both sides and connect to hosted blokchain nodes. If you want to connect to local or special remote nodes, you'll need to change configuation
+compose will start all required service on both sides and connect to hosted blokchain nodes. If you want to connect to local or special remote nodes, you'll need to change configuation. By default, system links to infrastructure blockchain nodes, Ethereum at `infura.io`, Factom at `factomd.net`, FAT courtesy node provided by Kompendium.
